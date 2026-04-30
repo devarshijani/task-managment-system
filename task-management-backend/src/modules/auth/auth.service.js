@@ -81,6 +81,18 @@ const register = async (data) => {
         status: "inactive",
     });
 
+    const changePassword = async (userId, currentPassword, newPassword) => {
+        const user = await User.findById(userId).select("+password");
+        if (!user) throw new Error("User not found");
+
+        const isMatch = await user.comparePassword(currentPassword);
+        if (!isMatch) throw new Error("Current password is incorrect");
+
+        user.password = newPassword;
+        await user.save();
+        return true;
+    };
+
     // Create Razorpay payment link
     const paymentLink = await razorpay.paymentLink.create({
         amount: plan.price * 100, // Razorpay expects paise
@@ -117,4 +129,4 @@ const register = async (data) => {
     };
 };
 
-module.exports = { login, register };
+module.exports = { login, register, changePassword };

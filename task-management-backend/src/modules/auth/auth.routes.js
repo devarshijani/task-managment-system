@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("./auth.controller");
+const { authenticate } = require("../../middlewares/auth.middleware");
 const { loginValidation, registerValidation } = require("./auth.validation");
 
 const validate = (schema) => (req, res, next) => {
@@ -14,5 +15,10 @@ const validate = (schema) => (req, res, next) => {
 
 router.post("/login", validate(loginValidation), authController.login);
 router.post("/register", validate(registerValidation), authController.register);
+router.put(
+    "/change-password",
+    authenticate,
+    authController.changePassword
+);
 
 module.exports = router;

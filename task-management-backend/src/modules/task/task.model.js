@@ -40,6 +40,10 @@ const taskSchema = new mongoose.Schema(
             enum: ["high", "medium", "low"],
             default: "medium",
         },
+        dueDate: {
+            type: Date,
+            default: null,
+        },
         status: {
             type: String,
             enum: [

@@ -8,6 +8,14 @@ const login = asyncHandler(async (req, res) => {
     return sendResponse(res, 200, true, "Login successful", { user, token });
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    await authService.changePassword(req.user._id, currentPassword, newPassword);
+    return sendResponse(res, 200, true, "Password changed successfully");
+});
+
+module.exports = { login, register, changePassword };
+
 const register = asyncHandler(async (req, res) => {
     const result = await authService.register(req.body);
     return sendResponse(res, 201, true, result.message, {

@@ -22,6 +22,7 @@ const createTaskValidation = Joi.object({
             "deployment"
         )
         .optional(),
+    dueDate: Joi.date().optional(),
 });
 
 const updateTaskValidation = Joi.object({
@@ -41,6 +42,7 @@ const updateTaskValidation = Joi.object({
             "deployment"
         )
         .optional(),
+    dueDate: Joi.date().optional(),
 });
 
 module.exports = { createTaskValidation, updateTaskValidation };
