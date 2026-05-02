@@ -14,8 +14,6 @@ const changePassword = asyncHandler(async (req, res) => {
     return sendResponse(res, 200, true, "Password changed successfully");
 });
 
-module.exports = { login, register, changePassword };
-
 const register = asyncHandler(async (req, res) => {
     const result = await authService.register(req.body);
     return sendResponse(res, 201, true, result.message, {
@@ -25,4 +23,4 @@ const register = asyncHandler(async (req, res) => {
     });
 });
 
-module.exports = { login, register };
+module.exports = { login, register, changePassword };

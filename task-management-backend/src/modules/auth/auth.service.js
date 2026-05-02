@@ -41,6 +41,18 @@ const login = async (email, password, fcmToken = null) => {
     return { user, token };
 };
 
+const changePassword = async (userId, currentPassword, newPassword) => {
+    const user = await User.findById(userId).select("+password");
+    if (!user) throw new Error("User not found");
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) throw new Error("Current password is incorrect");
+
+    user.password = newPassword;
+    await user.save();
+    return true;
+};
+
 // Register admin + company + create razorpay payment link
 const register = async (data) => {
     const {
@@ -81,18 +93,6 @@ const register = async (data) => {
         status: "inactive",
     });
 
-    const changePassword = async (userId, currentPassword, newPassword) => {
-        const user = await User.findById(userId).select("+password");
-        if (!user) throw new Error("User not found");
-
-        const isMatch = await user.comparePassword(currentPassword);
-        if (!isMatch) throw new Error("Current password is incorrect");
-
-        user.password = newPassword;
-        await user.save();
-        return true;
-    };
-
     // Create Razorpay payment link
     const paymentLink = await razorpay.paymentLink.create({
         amount: plan.price * 100, // Razorpay expects paise
@@ -116,6 +116,8 @@ const register = async (data) => {
         callback_url: `${process.env.FRONTEND_URL}/payment-success`,
         callback_method: "get",
     });
+
+
 
     // Save payment link id in company
     company.paymentLinkId = paymentLink.id;
